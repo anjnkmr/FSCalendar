@@ -1119,14 +1119,8 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
 
 - (void)selectDate:(NSDate *)date scrollToDate:(BOOL)scrollToDate
 {
-    [self selectDate:date scrollToDate:scrollToDate atMonthPosition:FSCalendarMonthPositionCurrent triggerDelegate:true];
+    [self selectDate:date scrollToDate:scrollToDate atMonthPosition:FSCalendarMonthPositionCurrent];
 }
-
-- (void)selectDate:(NSDate *)date scrollToDate:(BOOL)scrollToDate triggerDelegate:(BOOL)triggerDelegate
-{
-    [self selectDate:date scrollToDate:scrollToDate atMonthPosition:FSCalendarMonthPositionCurrent triggerDelegate:triggerDelegate];
-}
-
 
 - (void)deselectDate:(NSDate *)date
 {
@@ -1145,12 +1139,11 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
     }
 }
 
-- (void)selectDate:(NSDate *)date scrollToDate:(BOOL)scrollToDate atMonthPosition:(FSCalendarMonthPosition)monthPosition triggerDelegate:(BOOL)triggerDelegate
+- (void)selectDate:(NSDate *)date scrollToDate:(BOOL)scrollToDate atMonthPosition:(FSCalendarMonthPosition)monthPosition
 {
     if (!self.allowsSelection || !date) return;
         
     [self requestBoundingDatesIfNecessary];
-    
     
     FSCalendarAssertDateInBounds(date,self.gregorian,self.minimumDate,self.maximumDate);
     
@@ -1178,9 +1171,7 @@ typedef NS_ENUM(NSUInteger, FSCalendarOrientation) {
             shouldSelect &= (![self.delegateProxy respondsToSelector:@selector(calendar:shouldSelectDate:atMonthPosition:)] || [self.delegateProxy calendar:self shouldSelectDate:targetDate atMonthPosition:monthPosition]);
             if (shouldSelect) {
                 if ([self isDateSelected:targetDate]) {
-                    if (triggerDelegate) {
                     [self.delegateProxy calendar:self didSelectDate:targetDate atMonthPosition:monthPosition];
-                    }
                 } else {
                     NSDate *selectedDate = self.selectedDate;
                     if (selectedDate) {
